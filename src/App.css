@@ -1,0 +1,32 @@
+@import "tailwindcss";
+
+.rojo-oscuro {
+  background-color: #901414;
+
+}
+
+.rojo-medio {
+  background-color: #D32F2F;
+}
+
+.rojo-claro {
+  background-color: #E57373;
+}
+
+.gris-oscuro {
+  background-color: #2e2d2d;
+}
+
+.gris-medio {
+  background-color: #9E9E9E;
+}
+
+.gris-claro {
+  background-color:  #E0E0E0 ;
+}
+
+
+body {
+  background-color: #2e2d2d;
+  color: white;
+}
