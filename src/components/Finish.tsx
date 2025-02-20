@@ -34,7 +34,7 @@ const Finish = () => {
     });
 
     // Crear una hoja para los exercises
-    const exerciseRows = [];
+    const exerciseRows: any[] = [];
     
     exerciseData.forEach(exercise => {
       // Añadir la fila del ejercicio
