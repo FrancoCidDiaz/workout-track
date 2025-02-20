@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import  { useState } from 'react';
 import { useWorkoutStore } from '../store/workoutStore'; // Asegúrate de importar tu store
 import * as XLSX from 'xlsx';
 
