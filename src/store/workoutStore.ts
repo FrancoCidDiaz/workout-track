@@ -3,9 +3,9 @@ import { v4 as uuidv4 } from "uuid";
 
 interface Set {
     id: string; // ID único para cada set
-    weight: number;
-    reps: number;
-    rir: number;
+    weight: string;
+    reps: string;
+    rir: string;
     notes?: string;
 }
 
