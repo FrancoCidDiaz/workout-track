@@ -26,9 +26,10 @@ const AddExercise = () => {
     
 
     return (
-        <div className="flex flex-col items-center gap-4 mt-4">
+        <div className="flex flex-col items-center gap-4 mt-4 w-full">
             <h4>Añadir Ejercicio</h4>
             <input
+                className="w-2/4 placeholder:text-center"
                 type="text"
                 value={exerciseName}
                 onChange={(e) => setExerciseName(e.target.value)}

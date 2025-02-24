@@ -17,7 +17,7 @@ const Exercises = () => {
 
     return (
         <div className="flex flex-col items-center">
-            <h4>Ejercicios del Workout Actual</h4>
+            <h4>Entrenamiento Actual:</h4>
             {currentWorkout ? (
                 <ul>
                     {currentWorkout.exercises.map((exercise) => (
@@ -62,7 +62,7 @@ const Exercises = () => {
                     ))}
                 </ul>
             ) : (
-                <p>No hay un workout actual.</p>
+                <p>No hay un entrenamiento actual.</p>
             )}
         </div>
     );

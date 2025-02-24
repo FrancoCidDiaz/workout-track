@@ -1,5 +1,10 @@
 import { create } from "zustand";
 import { v4 as uuidv4 } from "uuid";
+import { useAuthStore } from "../store/authStore";
+
+
+
+
 
 interface Set {
     id: string; // ID único para cada set
@@ -16,6 +21,7 @@ interface Exercise {
 }
 
 interface Workout {
+    userId: string;
     id: string;
     date: string;
     name: string;
@@ -29,16 +35,37 @@ interface WorkoutStore {
     currentWorkout: Workout | null;
     addWorkout: (workout: Workout) => void;
     addExercise: (exercise: Omit<Exercise, 'id' | 'sets'>) => void;
-    addSetToExercise: (exerciseId: string) => void; // Función para añadir sets
+    addSetToExercise: (exerciseId: string) => void;
     updateSetInExercise: (exerciseId: string, setId: string, updatedSet: Partial<Set>) => void;
+    saveWorkout: (notes: string) => void;
+    fetchWorkouts: (userId: string) => Promise<void>;
 }
+
+
+
+
+
 
 export const useWorkoutStore = create<WorkoutStore>((set) => ({
     workouts: [],
     currentWorkout: null,
+    fetchWorkouts: async (userId: string) => {
+        try {
+            const response = await fetch(`http://localhost:3001/api/workouts?userId=${userId}`);
+            if (!response.ok) throw new Error("Error al obtener workouts");
+            const workouts = await response.json();
+            set({ workouts });
+            return workouts; // Retornar los workouts obtenidos
+        } catch (error) {
+            console.error("Error fetching workouts:", error);
+            return []; // Retornar array vacío en caso de error
+        }
+    },
     addWorkout: (workout) => set((state) => {
-        const newWorkouts = [...state.workouts, workout];
-        return { workouts: newWorkouts, currentWorkout: workout };
+        const userId = useAuthStore.getState().user?.uid || "";
+        const newWorkouts = [...state.workouts, { ...workout, userId }];
+        console.log(newWorkouts)
+        return { workouts: newWorkouts, currentWorkout: { ...workout, userId } };
     }),
     addExercise: (exercise) => set((state) => {
         if (state.currentWorkout) {
@@ -100,4 +127,45 @@ export const useWorkoutStore = create<WorkoutStore>((set) => ({
         }
         return state;
     }),
+    saveWorkout: async (notes: string) => {
+        const { currentWorkout } = useWorkoutStore.getState();
+        if (!currentWorkout) return;
+    
+        const workoutData = {
+            userId: currentWorkout.userId,
+            name: currentWorkout.name,
+            date: currentWorkout.date,
+            totalTime: currentWorkout.totalTime,
+            notes: notes,
+            exercises: currentWorkout.exercises.map((exercise) => ({
+                name: exercise.name,
+                sets: exercise.sets.map((set) => ({
+                    weight: parseFloat(set.weight),
+                    reps: parseInt(set.reps),
+                    rir: parseInt(set.rir),
+                    notes: set.notes || "",
+                })),
+            })),
+        };
+    
+        try {
+            const response = await fetch("http://localhost:3001/api/workouts", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(workoutData),
+            });
+    
+            if (!response.ok) {
+                throw new Error("Error al guardar el workout");
+            }
+    
+            console.log("Workout guardado exitosamente");
+            set({ currentWorkout: null });
+        } catch (error) {
+            console.error("Error al guardar el workout:", error);
+        }
+    
+    },
 }));
