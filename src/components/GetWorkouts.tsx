@@ -6,12 +6,12 @@ import { Link } from 'react-router';
 
 const GetWorkouts = () => {
 
-  const { fetchWorkouts } = useWorkoutStore();
+  const { fetchWorkouts, Workout } = useWorkoutStore();
   const { user } = useAuthStore();
-  const [workouts, setWorkouts] = useState([])
+  const [workouts, setWorkouts] = useState<Workout[]>([]);
 
   const getWorkouts = async () => {
-   const userId = user.uid
+    const userId = user?.uid || "";
    const response = await fetchWorkouts(userId)
    setWorkouts(response)
   }
