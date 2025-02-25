@@ -27,6 +27,10 @@
 
 
 body {
-  background-color: #2e2d2d;
+  background-color: #272525;
   color: white;
+  font-family: "Bebas Neue", serif;
+  font-weight: 500;
+  font-style: normal;
 }
+
