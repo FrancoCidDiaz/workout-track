@@ -16,7 +16,7 @@ const AddTemplates: React.FC = () => {
         if (newTemplateName.trim() && newDescription.trim()) {
             const newTemplate = {
                 id: uuidv4(),
-                userId: user?.uid,
+                userId: user?.uid || "",
                 name: newTemplateName,
                 description: newDescription,
                 exercises: [],

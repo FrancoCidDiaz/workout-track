@@ -3,6 +3,7 @@ import { useWorkoutStore } from "../store/workoutStore";
 import { useTemplateStore } from "../store/templateStore";
 import { useAuthStore } from "../store/authStore";
 import { convertTemplateToWorkout } from "../hooks/convertTemplateToWorkout";
+import { Exercise,Workout } from "../../types";
 
 const Exercises = () => {
     const { currentWorkout, addSetToExercise, updateSetInExercise, deleteSetToExercise, fetchWorkouts, updateCurrentWorkout} = useWorkoutStore();
@@ -50,10 +51,10 @@ const Exercises = () => {
         const workouts = await fetchWorkouts(user?.uid);
     
         // Filtra los ejercicios que coincidan con el nombre
-        const filteredExercises = workouts.flatMap((workout) =>
+        const filteredExercises = workouts.flatMap((workout: Workout) =>
             workout.exercises
-                .filter((exercise) => exercise.name === exerciseName)
-                .map((exercise) => ({
+                .filter((exercise: Exercise) => exercise.name === exerciseName)
+                .map((exercise: Exercise) => ({
                     ...exercise,
                     workoutDate: workout.date,
                     workoutName: workout.name 

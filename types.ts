@@ -23,7 +23,7 @@ export type Set = {
 }
 
 export type Template = {
-    id: string;
+    _id: string;
     name: string;
     userId: string;
     description: string;

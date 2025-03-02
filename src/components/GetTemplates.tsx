@@ -11,7 +11,7 @@ const GetTemplates = () => {
     const { fetchTemplates, templates, selectTemplate, deleteTemplate } = useTemplateStore();
     const { updateCurrentWorkout } = useWorkoutStore();
     const { user } = useAuthStore();
-    const [localTemplates, setLocalTemplates] = useState([]);
+    const [localTemplates, setLocalTemplates] = useState<Template[]>([]);
     const navigate = useNavigate();
 
     const handleSelectTemplate = (template: Template) => {
