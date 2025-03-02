@@ -2,7 +2,13 @@
 
 .rojo-oscuro {
   background-color: #901414;
+  transition: background-color 0.45s ease;
 
+}
+
+.rojo-oscuro:hover {
+  background-color: #c51717; /* Color rojo más oscuro para el hover */
+  cursor: pointer;
 }
 
 .rojo-medio {

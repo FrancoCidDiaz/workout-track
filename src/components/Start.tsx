@@ -2,10 +2,13 @@ import { useState, useEffect } from "react";
 import { useWorkoutStore } from "../store/workoutStore";
 import { v4 as uuidv4 } from "uuid";
 import { useAuthStore } from "../store/authStore";
-import { useNavigate } from "react-router";
+import { useTemplateStore } from "../store/templateStore";
+import { useNavigate, Link } from "react-router";
+import { convertTemplateToWorkout } from "../hooks/convertTemplateToWorkout";
 
 const Start = () => {
     const { workouts, currentWorkout, addWorkout } = useWorkoutStore();
+    const { selectedTemplate } = useTemplateStore()
     const { user, logout } = useAuthStore();
     const navigate = useNavigate()
 
@@ -15,6 +18,17 @@ const Start = () => {
         await logout
         navigate("/")
     }
+
+   
+
+    useEffect(() => {
+      if(selectedTemplate) {
+        const convertedTemplate = convertTemplateToWorkout(selectedTemplate)
+        addWorkout(convertedTemplate)
+      }
+    }, [])
+    
+    
 
     
 
@@ -44,14 +58,10 @@ const Start = () => {
     };
 
     // useEffect para registrar cambios en workouts
-    useEffect(() => {
-        console.log(workouts);
-    }, [workouts]); // Agrega el cierre correcto del array de dependencias
+  
 
 
-    useEffect(() => {
-      console.log("usuario:", user)
-    }, [user])
+   
     
     return (
 
@@ -66,24 +76,45 @@ const Start = () => {
              <button className="rojo-oscuro p-3 rounded-sm" onClick={onLogout}>Cerrar sesión</button>
          </div>
           ): (null)}
+             <div className="flex flex-row gap-3">
+              <Link className="rojo-oscuro p-3 rounded-sm" to="/add-templates">Añadir Templates</Link>
+              <Link className="rojo-oscuro p-3 rounded-sm" to="/templates">Listar Templates</Link>
+            </div>
+            <div className="w-full">
+                {selectedTemplate ? (
+                 <h3 className="text-center">Workout actual: {selectedTemplate.name}</h3>
+                ) 
+                
+                
+                :(
+                     <div className="flex flex-col gap-3 w-full justify-center items-center">
+                    <h3 className="text-2xl p-2 text-center">Qué entrenarás hoy?</h3>
+                    <input
+                      className="w-2/4 placeholder:text-center"
+                      type="text"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      placeholder="Nombre del entrenamiento"
+                      />
+                    <button className="rojo-oscuro p-3 rounded-sm w-1/2" onClick={handleAddWorkout}>Empezar!</button>
+      
+                    {currentWorkout && (
+                      <div>
+                          <h3>Workout Actual: {currentWorkout.name}</h3>
+                      </div>
+                  )}
+                  </div>
 
+                ) 
+                
+            }
+
+              
+
+            </div>
            
-            <h3 className="text-4xl p-2 text-center">Qué entrenarás hoy?</h3>
-            <input
-                className="w-2/4 placeholder:text-center"
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Nombre del entrenamiento"
-            />
-            <button className="rojo-oscuro p-3 rounded-sm" onClick={handleAddWorkout}>Empezar!</button>
-
             {/* Mostrar el nombre del workout actual */}
-            {currentWorkout && (
-                <div>
-                    <h4>Workout Actual: {currentWorkout.name}</h4>
-                </div>
-            )}
+            
         </div>
     );
 };

@@ -7,9 +7,10 @@ const AddExercise = () => {
 
     const handleAddExercise = () => {
         if (!currentWorkout || !exerciseName.trim()) return; // Asegúrate de que hay un workout actual y nombre de ejercicio
+        const formatedName = exerciseName.toLowerCase()
 
         addExercise({
-            name: exerciseName
+            name: formatedName
             
            
         });
@@ -18,11 +19,11 @@ const AddExercise = () => {
         setExerciseName("");
     };
 
-    useEffect(() => {
-      console.log(currentWorkout)
+    // useEffect(() => {
+    //   console.log(currentWorkout)
     
    
-    }, [currentWorkout])
+    // }, [currentWorkout])
     
 
     return (

@@ -4,7 +4,7 @@ import AddExercise from './components/AddExercise'
 import Exercises from './components/Exercises'
 import Finish from './components/Finish'
 import Start from './components/Start'
-import Login from './components/Login'
+
 
 
 function App() {
@@ -17,6 +17,8 @@ function App() {
      <AddExercise/>
      <Exercises/>
      <Finish/>
+    
+     
      </>
     
    

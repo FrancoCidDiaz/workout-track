@@ -36,9 +36,12 @@ interface WorkoutStore {
     addWorkout: (workout: Workout) => void;
     addExercise: (exercise: Omit<Exercise, 'id' | 'sets'>) => void;
     addSetToExercise: (exerciseId: string) => void;
+    deleteSetToExercise: (exerciseId: string) => void;
     updateSetInExercise: (exerciseId: string, setId: string, updatedSet: Partial<Set>) => void;
     saveWorkout: (notes: string) => void;
     fetchWorkouts: (userId: string) => Promise<void>;
+    updateCurrentWorkout: (workout: Workout) => void;
+    clearCurrentWorkout: () => void;
 }
 
 
@@ -48,7 +51,7 @@ interface WorkoutStore {
 
 export const useWorkoutStore = create<WorkoutStore>((set) => ({
     workouts: [],
-    currentWorkout: null,
+    currentWorkout: JSON.parse(localStorage.getItem("currentWorkout") || "null"),
     fetchWorkouts: async (userId: string) => {
         try {
             const response = await fetch(`http://localhost:3001/api/workouts?userId=${userId}`);
@@ -64,8 +67,23 @@ export const useWorkoutStore = create<WorkoutStore>((set) => ({
     addWorkout: (workout) => set((state) => {
         const userId = useAuthStore.getState().user?.uid || "";
         const newWorkouts = [...state.workouts, { ...workout, userId }];
-        console.log(newWorkouts)
+        //console.log(newWorkouts)
+        const newWorkout =  { ...workout, userId }
+        console.log("new workout desde addWorkout", newWorkout)
+        localStorage.setItem("currentWorkout", JSON.stringify(newWorkout));
+        //return {  currentWorkout: { ...workout, userId } };
         return { workouts: newWorkouts, currentWorkout: { ...workout, userId } };
+    }),
+    updateCurrentWorkout: (workout: Partial<Workout>) => set((state) => {
+        if (state.currentWorkout) {
+            const updatedWorkout = {
+                ...state.currentWorkout,
+                ...workout, // Actualiza los campos del workout con los nuevos valores
+            };
+            localStorage.setItem("currentWorkout", JSON.stringify(updatedWorkout));
+            return { currentWorkout: updatedWorkout };
+        }
+        return state;
     }),
     addExercise: (exercise) => set((state) => {
         if (state.currentWorkout) {
@@ -76,6 +94,7 @@ export const useWorkoutStore = create<WorkoutStore>((set) => ({
                     { ...exercise, id: uuidv4(), sets: [] } // Cada ejercicio debe tener un ID único
                 ],
             };
+            localStorage.setItem("currentWorkout", JSON.stringify(updatedWorkout));
             return { currentWorkout: updatedWorkout };
         }
         return state;
@@ -94,6 +113,30 @@ export const useWorkoutStore = create<WorkoutStore>((set) => ({
                 }
                 return exercise;
             });
+            const updatedWorkout = {
+                ...state.currentWorkout,
+                exercises: updatedExercises,
+            };
+            localStorage.setItem("currentWorkout", JSON.stringify(updatedWorkout)); // Actualiza localStorage
+            return { currentWorkout: updatedWorkout };
+        }
+        return state;
+    }),
+    deleteSetToExercise: (exerciseId: string) => set((state) => {
+        if (state.currentWorkout) {
+            const updatedExercises = state.currentWorkout.exercises.map((exercise) => {
+                if (exercise.id === exerciseId) {
+                    // Verifica que el ejercicio tenga sets antes de intentar eliminar uno
+                    if (exercise.sets.length > 0) {
+                        return {
+                            ...exercise,
+                            sets: exercise.sets.slice(0, -1), // Elimina el último set
+                        };
+                    }
+                }
+                return exercise;
+            });
+    
             return {
                 currentWorkout: {
                     ...state.currentWorkout,
@@ -118,6 +161,11 @@ export const useWorkoutStore = create<WorkoutStore>((set) => ({
                 }
                 return exercise;
             });
+            const updatedWorkout = {
+                ...state.currentWorkout,
+                exercises: updatedExercises
+            };
+            localStorage.setItem("currentWorkout", JSON.stringify(updatedWorkout));
             return {
                 currentWorkout: {
                     ...state.currentWorkout,
@@ -127,11 +175,17 @@ export const useWorkoutStore = create<WorkoutStore>((set) => ({
         }
         return state;
     }),
+    clearCurrentWorkout: () => {
+        localStorage.removeItem("currentWorkout"); // Elimina el currentWorkout del localStorage
+        set({ currentWorkout: null }); // Limpia el estado
+    },
+
     saveWorkout: async (notes: string) => {
         const { currentWorkout } = useWorkoutStore.getState();
         if (!currentWorkout) return;
-    
+       
         const workoutData = {
+            id: currentWorkout.id,
             userId: currentWorkout.userId,
             name: currentWorkout.name,
             date: currentWorkout.date,
@@ -140,13 +194,16 @@ export const useWorkoutStore = create<WorkoutStore>((set) => ({
             exercises: currentWorkout.exercises.map((exercise) => ({
                 name: exercise.name,
                 sets: exercise.sets.map((set) => ({
-                    weight: parseFloat(set.weight),
-                    reps: parseInt(set.reps),
-                    rir: parseInt(set.rir),
+                    weight: set.weight,
+                    reps: set.reps,
+                    rir: set.rir,
                     notes: set.notes || "",
                 })),
             })),
         };
+        
+    
+        console.log("Datos enviados al servidor:", workoutData); // Depuración
     
         try {
             const response = await fetch("http://localhost:3001/api/workouts", {
@@ -158,14 +215,19 @@ export const useWorkoutStore = create<WorkoutStore>((set) => ({
             });
     
             if (!response.ok) {
-                throw new Error("Error al guardar el workout");
+                const errorData = await response.json();
+                throw new Error(errorData.message || "Error al guardar el workout");
             }
     
-            console.log("Workout guardado exitosamente");
-            set({ currentWorkout: null });
-        } catch (error) {
-            console.error("Error al guardar el workout:", error);
-        }
+            const savedWorkout = await response.json();
+            console.log("Workout guardado exitosamente:", savedWorkout); // Depuración
     
+            set((state) => ({
+                workouts: [...state.workouts, savedWorkout],
+                currentWorkout: null,
+            }));
+        } catch (error) {
+            console.error("Error al guardar el workout:", error); // Depuración
+        }
     },
 }));
