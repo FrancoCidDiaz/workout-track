@@ -7,7 +7,7 @@ import { useNavigate, Link } from "react-router";
 import { convertTemplateToWorkout } from "../hooks/convertTemplateToWorkout";
 
 const Start = () => {
-    const { workouts, currentWorkout, addWorkout } = useWorkoutStore();
+    const { currentWorkout, addWorkout } = useWorkoutStore();
     const { selectedTemplate } = useTemplateStore()
     const { user, logout } = useAuthStore();
     const navigate = useNavigate()

@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router";
 import { ClipLoader } from "react-spinners";
 import { useWorkoutStore } from "../store/workoutStore";
 import { convertTemplateToWorkout } from "../hooks/convertTemplateToWorkout";
+import { Template } from "../../types"
 
 const GetTemplates = () => {
     const { fetchTemplates, templates, selectTemplate, deleteTemplate } = useTemplateStore();
@@ -13,7 +14,7 @@ const GetTemplates = () => {
     const [localTemplates, setLocalTemplates] = useState([]);
     const navigate = useNavigate();
 
-    const handleSelectTemplate = (template) => {
+    const handleSelectTemplate = (template: Template) => {
         const workoutFromTemplate = convertTemplateToWorkout(template);
         updateCurrentWorkout(workoutFromTemplate); // Actualiza el currentWorkout
         selectTemplate(template);
@@ -21,7 +22,7 @@ const GetTemplates = () => {
         navigate("/app"); // Navega a la vista principal
     };
 
-    const handleDeleteTemplate = async(template) => {
+    const handleDeleteTemplate = async(template: Template) => {
       await deleteTemplate(template._id)
       setLocalTemplates((prevTemplates) => prevTemplates.filter(t => t._id !== template._id));
 

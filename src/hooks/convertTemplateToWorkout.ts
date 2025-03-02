@@ -1,4 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
+import { Template, Workout } from "../../types";
 
 export const convertTemplateToWorkout = (template: Template): Workout => {
     return {

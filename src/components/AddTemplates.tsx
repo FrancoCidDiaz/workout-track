@@ -3,6 +3,7 @@ import { useTemplateStore } from "../store/templateStore";
 import { useAuthStore } from "../store/authStore";
 import AddExercisesToTemplate from "./AddExercisesToTemplate";
 import { Link } from "react-router";
+import { v4 as uuidv4 } from "uuid";
 
 const AddTemplates: React.FC = () => {
     const { addTemplate, deleteTemplate, saveTemplate, currentTemplate } = useTemplateStore();
@@ -14,7 +15,8 @@ const AddTemplates: React.FC = () => {
     const handleAddTemplate = () => {
         if (newTemplateName.trim() && newDescription.trim()) {
             const newTemplate = {
-                userId: user.uid,
+                id: uuidv4(),
+                userId: user?.uid,
                 name: newTemplateName,
                 description: newDescription,
                 exercises: [],
