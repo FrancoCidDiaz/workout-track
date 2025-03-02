@@ -18,7 +18,7 @@ interface Exercise {
 interface Template {
     id: string;
     name: string;
-    userId: string;
+    userId: string | undefined
     description: string;
     exercises: Exercise[];
 }

@@ -70,7 +70,8 @@ const AddTemplates: React.FC = () => {
                     <ul>
                         {currentTemplate.exercises?.map((exercise, index) => (
                             <li key={index}>
-                                {/* {exercise.name} - {exercise.sets} sets */}
+                                 {exercise.name} -
+                                  {/* {exercise.sets} sets  */}
                             </li>
                         ))}
                     </ul>
