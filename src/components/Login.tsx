@@ -15,7 +15,11 @@ const Login = () => {
 
   const onLogin = async () => {
     await login();
-    navigate("/app");
+    const success = await login()
+    if (success) {
+      navigate("/app");
+    }
+    
   };
 
   // Si el usuario está autenticado, no renderizamos nada (useEffect maneja la redirección)

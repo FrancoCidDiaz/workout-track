@@ -19,6 +19,7 @@ interface AuthStore {
 export const useAuthStore = create<AuthStore>((set) => ({
     user: null,
     login: async () => {
+      try {
         const user = await signInWithGoogle();
         if (user) {
             set({
@@ -30,6 +31,10 @@ export const useAuthStore = create<AuthStore>((set) => ({
                 },
             });
         }
+      } catch (error) {
+        console.log("error al iniciar sesion con google:" , error)
+      }
+       
     },
     logout: async () => {
         await logout();
