@@ -18,7 +18,7 @@ const googleProvider = new GoogleAuthProvider();
 
 
 const signInWithGoogle = async () => {
-  auth.settings.appVerificationDisabledForTesting = true;
+ 
   try {
     console.log("Intentando abrir el pop-up...");
     const result = await signInWithPopup(auth, googleProvider);
