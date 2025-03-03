@@ -16,7 +16,10 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
 
+auth.settings.appVerificationDisabledForTesting = true;
+
 const signInWithGoogle = async () => {
+  auth.settings.appVerificationDisabledForTesting = true;
   try {
     const result = await signInWithPopup(auth, googleProvider);
     return result.user; // Devuelve los datos del usuario autenticado
