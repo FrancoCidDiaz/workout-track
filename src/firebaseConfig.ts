@@ -1,6 +1,6 @@
 // firebaseConfig.ts
 import { initializeApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, signOut } from "firebase/auth";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
 
 const firebaseConfig = {
     apiKey: "AIzaSyA-sxykPTSW8oRfPpGAJ71Nqn57QB1SZxw",
@@ -21,7 +21,7 @@ const signInWithGoogle = async () => {
   auth.settings.appVerificationDisabledForTesting = true;
   try {
     console.log("Intentando abrir el pop-up...");
-    const result = await signInWithRedirect(auth, googleProvider);
+    const result = await signInWithPopup(auth, googleProvider);
     console.log("Usuario autenticado:", result.user);
     return result.user;
   } catch (error) {
