@@ -93,7 +93,7 @@ const Finish = () => {
         onChange={(e) => setNotes(e.target.value)}
         placeholder="Notas sobre el entrenamiento"
       />
-      <button className='rojo-oscuro p-3 rounded-sm' onClick={() => handleFinish(notes)}>Finalizar</button>
+      <button onTouchStart={() => handleFinish(notes)} className='rojo-oscuro p-3 rounded-sm' onClick={() => handleFinish(notes)}>Finalizar</button>
       <button className='rojo-oscuro p-3 rounded-sm' onClick={clearCurrentWorkout}>Vaciar Entrenamiento actual</button>
       <Link className='rojo-oscuro p-3 rounded-sm' to="/workouts">Revisar mis entrenamientos</Link>
     </div>
