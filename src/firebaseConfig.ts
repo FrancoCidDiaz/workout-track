@@ -1,6 +1,6 @@
 // firebaseConfig.ts
 import { initializeApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider, signInWithRedirect, signOut } from "firebase/auth";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
 
 const firebaseConfig = {
     apiKey: "AIzaSyA-sxykPTSW8oRfPpGAJ71Nqn57QB1SZxw",
@@ -18,7 +18,7 @@ const googleProvider = new GoogleAuthProvider();
 
 const signInWithGoogle = async () => {
   try {
-    const result = await signInWithRedirect(auth, googleProvider);
+    const result = await signInWithPopup(auth, googleProvider);
     return result.user; // Devuelve los datos del usuario autenticado
   } catch (error) {
     console.error("Error al autenticar con Google:", error);
