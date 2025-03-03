@@ -16,7 +16,6 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
 
-auth.settings.appVerificationDisabledForTesting = true;
 
 const signInWithGoogle = async () => {
   auth.settings.appVerificationDisabledForTesting = true;
