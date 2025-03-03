@@ -4,6 +4,10 @@ import { useAuthStore } from "../store/authStore";
 
 
 
+const API_URL = import.meta.env.VITE_API_URL;
+
+
+
 
 
 interface Set {
@@ -54,7 +58,8 @@ export const useWorkoutStore = create<WorkoutStore>((set) => ({
     currentWorkout: JSON.parse(localStorage.getItem("currentWorkout") || "null"),
     fetchWorkouts: async (userId: string) => {
         try {
-            const response = await fetch(`http://localhost:3001/api/workouts?userId=${userId}`);
+            const response = await fetch(`/${API_URL}?userId=${userId}`);
+            //const response = await fetch(`http://localhost:3001/api/workouts?userId=${userId}`);
             if (!response.ok) throw new Error("Error al obtener workouts");
             const workouts = await response.json();
             set({ workouts });
